@@ -738,7 +738,7 @@ def RCP(rcp_dataframe,df_AI, model, name, save_to):
     
 def MACA_data_SM(scenario,model):
     data_M_Hist  = []
-    path_t = os.getcwd()+'/Maca/RCP'+str(scenario)+["\"]"+str(model)+'.xlsx'
+    path_t = os.getcwd()+'/Maca/RCP'+str(scenario)+str(model)+'.xlsx'
     data_M_Hist  = pd.read_excel(path_t, engine = 'openpyxl')
 
     data_M_Hist.rename(columns = {'DATE' : 'Date',     'tasmin(K)' : 'Tmin[K]', 
