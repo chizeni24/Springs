@@ -97,7 +97,7 @@ def read_tabular_data(file_name,base_dir):
 	df_read = pd.read_csv(df, thousands=r',')                                   
 	return df_read
 def data_reader(file_name,base_dir, skip_rows):
-	df      = os.path.join(base_dir,file_name)
+	df      = base_dir+file_name
 	df_read = pd.read_csv(df, thousands=r',', skiprows = skip_rows) 
 	return df_read
 
