@@ -58,15 +58,10 @@ display(HTML("""<style>.output {
 print (' All libraries, tools, and functions have been succesfully uploaded  ')
 
 
-# **CHANGE THE PATH OF FILE**
-
-# In[356]:
-
-
 
 
 base_directory = os.getcwd()
-Models = ["Extratree_tuned_", "XGBoost_tuned_"]
+Models = ['catboost_untuned']
 rcp_scenerio = ["RCP45","RCP85"]
 
 
@@ -202,7 +197,26 @@ for i in Models:
             shiftx_annot =  0
             shifty_annot = 0.40        
             plt.show()
-        
+        #-------------------------------------------------------------------------------------------------------------
+        # plot groundwater elevation at J-17
+        #-------------------------------------------------------------------------------------------------------------
+        cfs_to_m3  = 0.028316847
+        fnt_size      = 20
+        leg_loc       = 2
+        Station       = 'USGS 08170000 San Marcos Springs at New Bruanfels'
+        label         = 'San Antonio'
+        y_ax_label    =  'SF$[m^3/s]$'
+        y_min         = 0
+        y_max         = 14 
+        num_cs        = 5   # number of critical stages 
+        cs1           = 96 * cfs_to_m3      # 660 # ft
+        cs2           = 80 * cfs_to_m3      # 650 # ft 
+        #cs3           = 150 * cfs_to_m3      # 640 # ft
+        #cs4           = 100 * cfs_to_m3      # 630 # ft
+        #cs5           = 45 * cfs_to_m3      # 625 # ft
+        cs_line_thick = 0.1
+        legend_loc    = 2
+
   
         #----------------------------------------------------------------------------------------------------------------------
         #
@@ -343,8 +357,8 @@ for i in Models:
             barWidth = 1
          
             # Create blue bars
-            plt.bar(r, bars1, color='darkgoldenrod', edgecolor='black', width=barWidth, label='No restriction')
-            # Create green bars
+            plt.bar(r, bars1, color='seashell', edgecolor='black', width=barWidth, label='No restriction')
+            # ritical 1
             plt.bar(r, bars2, bottom=bars1, color='#f3ae85', edgecolor='black', width=barWidth, label='Critical Stage I')
             # Create khaki bars 
             plt.bar(r, bars3, bottom=bars12, color='#f17e52', edgecolor='black', width=barWidth, label='Critical Stage II')

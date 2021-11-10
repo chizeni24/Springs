@@ -449,6 +449,42 @@ def plot_training_test(df_AI_Train,df_AI_Test,Y_Train_Pred,path_to_Save):
 	plt.tight_layout(pad=1.2)
 	fig_test = fig
 	fig.savefig(path_to_Save + str('/Test_Plot_score.jpg'), format='jpeg', dpi=300, bbox_inches='tight')
+
+
+	
+#===========================================================================#
+						# Plot Test results #
+#===========================================================================#
+def plot_test(df_AI_Test,save_Model, name):
+	fig = plt.figure(figsize=(14,5),dpi=300)
+	ax = fig.add_subplot(1,1,1)
+	
+	ax.plot(df_AI_Test['SF$[m^3/s]$'].index,
+			df_AI_Test['SF$^{pred} [m^3/s]$'] , 
+			'--', color = 'red', lw = 3, label = str(name))
+	ax.plot(df_AI_Test['SF$[m^3/s]$'].index,
+			df_AI_Test['SF$[m^3/s]$'],'--', 
+			color = 'black', lw = 3, alpha=0.7, label = 'Measured')
+	
+	ax.set_xlabel('Data Points', fontsize = 28)
+	ax.tick_params(axis = "x", labelsize = 25)
+	ax.xaxis.set_tick_params(pad=5)
+	ax.set_ylabel('SF$[m^3/s]$', fontsize = 36)
+	
+	ax.tick_params(axis = "y", labelsize = 25)
+	ax.yaxis.set_tick_params(pad=5) # gap between ticks and axis
+	yoffset = 0.05                    #gap between ticks and label
+	################################################ 
+	plt.legend(bbox_to_anchor=(0,1.01),
+			   loc="lower left", ncol=3, 
+			   borderaxespad=0., prop={'size': 25})
+	
+	plt.tight_layout(pad=1.08)
+	fig.savefig(save_Model + str('/Prelim_Data_Analysis__Complete.jpg'), 
+				format='jpg', dpi=300, bbox_inches = 'tight')	
+
+
+
 #===========================================================================#
 #                        Shapley analysis plot                              #
 #===========================================================================#
@@ -487,12 +523,12 @@ def save_all_features(Features,path_to_save):
 							 df_AI[Features].to_numpy(),
 							 Features, ax=ax2, 
 							 show=False,interaction_index=features)
-		plt.ylabel('SHAP value for'+'\n'+str(features),fontsize = 16)
-		plt.xlabel(str(features),fontsize = 16)
+		plt.ylabel('SHAP value for'+'\n'+str(features),fontsize = 14)
+		plt.xlabel(str(features),fontsize = 14)
 		Pictures[features] = fig
-		plt.savefig(path_to_save +str('/Feature Interaction_'+str(count)+'.jpg'),
-					format='jpeg', dpi=300, bbox_inches ='tight')      
+		plt.savefig(path_to_save +str('/Feature Interaction_'+str(count)+'.jpg'),format='jpeg', dpi=300, bbox_inches ='tight')      
 	return Pictures
+
 
 
 def RCP(rcp_dataframe,df_AI, model, name, save_to): 
@@ -664,7 +700,7 @@ def plot_projections(df_future,df_AI, name, save_to):
 
 	return 
 
-	return 
+
 
 def MACA_data_SM(scenario,model):
 	data_M_Hist  = []
