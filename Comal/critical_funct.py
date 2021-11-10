@@ -2,11 +2,11 @@
 import pandas as pd
 import numpy as np
 import math
-from wdmtoolbox import wdmtoolbox 
+from wdmtoolbox import wdmtoolbox
 import matplotlib.pyplot as plt
 
 
-from datetime import datetime   
+from datetime import datetime
 from dateutil import relativedelta
 
 import numpy.polynomial.polynomial as poly
@@ -33,7 +33,7 @@ from pandas import ExcelFile
 
 import os
 from matplotlib import rc
-import matplotlib.ticker as mtick         
+import matplotlib.ticker as mtick
 
 # center all the figures and tables throughout the report
 from IPython.display import display, HTML
@@ -42,11 +42,11 @@ display(HTML("""<style>.output {
     align-items: center;
     text-align: center;}</style> """))
 
-print (' All libraries, tools, and functions have been succesfully uploaded  ')
+print(' All libraries, tools, and functions have been succesfully uploaded  ')
 
 
 base_directory = os.getcwd()
-Models = ["Extratree_tuned_", "XGBoost_tuned_"]
+Models = ["Catboost_untuned"]
 rcp_scenerio = ["RCP45", "RCP85"]
 
 
@@ -55,62 +55,66 @@ for i in Models:
     for j in rcp_scenerio:
         k = os.path.join(b, j)
 
-        df_SpringFlow_original  = pd.read_excel(k+"/df_future.xlsx",engine = "openpyxl")
-        df_SpringFlow_original  = df_SpringFlow_original.rename(columns = {'Unnamed: 0' : 'Date'})
-        df_SpringFlow_original = df_SpringFlow_original[['Date', 'SF$[m^3/s]$']]
-        df_SpringFlow_original = df_SpringFlow_original.rename(columns={'SF$[m^3/s]$':'SF$[m^3/s]$'})
+        df_SpringFlow_original = pd.read_excel(
+            k+"/df_future.xlsx", engine="openpyxl")
+        df_SpringFlow_original = df_SpringFlow_original.rename(
+            columns={'Unnamed: 0': 'Date'})
+        df_SpringFlow_original = df_SpringFlow_original[[
+            'Date', 'SF$[m^3/s]$']]
+        df_SpringFlow_original = df_SpringFlow_original.rename(
+            columns={'SF$[m^3/s]$': 'SF$[m^3/s]$'})
         df_SpringFlow_data = df_SpringFlow_original
-        
-        
+
         #-------------------------------------------------------------------------------------------------------
-        # remove the data before 12/31/2019 
+        # remove the data before 12/31/2019
         #-------------------------------------------------------------------------------------------------------
-        
-        condition_to_slice     = (df_SpringFlow_data.Date > '2019-12-31') 
+
+        condition_to_slice = (df_SpringFlow_data.Date > '2019-12-31')
         df_SpringFlow_data_reduced = []
         df_SpringFlow_data_reduced = df_SpringFlow_data[condition_to_slice]
         df_SpringFlow_data_reduced.reset_index(drop=True, inplace=True)
-        
-        
+
         #-------------------------------------------------------------------------------------------------------
-        # remove the data before 12/31/2019 
+        # remove the data before 12/31/2019
         #-------------------------------------------------------------------------------------------------------
-        
-        condition_to_slice     = (df_SpringFlow_data.Date > '2019-12-31') 
+
+        condition_to_slice = (df_SpringFlow_data.Date > '2019-12-31')
         df_SpringFlow_data_reduced = []
         df_SpringFlow_data_reduced = df_SpringFlow_data[condition_to_slice]
         df_SpringFlow_data_reduced.reset_index(drop=True, inplace=True)
-        
+
         #-------------------------------------------------------------------------------------------------------
         # numeric values of GWL data
         #-------------------------------------------------------------------------------------------------------
-        df_numeric_values_J17 = pd.to_numeric(df_SpringFlow_data_reduced['SF$[m^3/s]$' ], errors='coerce')
+        df_numeric_values_J17 = pd.to_numeric(
+            df_SpringFlow_data_reduced['SF$[m^3/s]$'], errors='coerce')
         df_numeric_values_J17
-        
+
         df_SpringFlow = df_numeric_values_J17.to_frame()
         df_SpringFlow
-        
+
         df_SpringFlow['Date'] = df_SpringFlow_data_reduced.Date
         df_SpringFlow
-        
+
         cols = list(df_SpringFlow.columns)
         cols.insert(0, cols.pop(cols.index('Date')))
         df_SpringFlow = df_SpringFlow.loc[:, cols]
         #df_SpringFlow
         #plt.plot(df_SpringFlow)
-        
+
         #-------------------------------------------------------------------------------------------------------
         # numeric values of GWL data
         #-------------------------------------------------------------------------------------------------------
-        df_numeric_values_J17 = pd.to_numeric(df_SpringFlow_data_reduced['SF$[m^3/s]$' ], errors='coerce')
+        df_numeric_values_J17 = pd.to_numeric(
+            df_SpringFlow_data_reduced['SF$[m^3/s]$'], errors='coerce')
         df_numeric_values_J17
-        
+
         df_SpringFlow = df_numeric_values_J17.to_frame()
         df_SpringFlow
-        
+
         df_SpringFlow['Date'] = df_SpringFlow_data_reduced.Date
         df_SpringFlow
-        
+
         cols = list(df_SpringFlow.columns)
         cols.insert(0, cols.pop(cols.index('Date')))
         df_SpringFlow = df_SpringFlow.loc[:, cols]
@@ -187,6 +191,28 @@ for i in Models:
             shiftx_annot =  0
             shifty_annot = 0.40        
             plt.show()
+
+
+
+        #-------------------------------------------------------------------------------------------------------------
+        # plot groundwater elevation at J-17
+        #-------------------------------------------------------------------------------------------------------------
+        cfs_to_m3  = 0.028316847
+        fnt_size      = 20
+        leg_loc       = 2
+        Station       = 'J17 (weekly mean)'
+        label         = 'J17'
+        y_ax_label    =  "Groundwater Elevation [ft]"
+        y_min         = 0
+        y_max         = 14 
+        num_cs        = 5   # number of critical stages 
+        cs1           = 225 * cfs_to_m3      # 660 # ft
+        cs2           = 200 * cfs_to_m3      # 650 # ft 
+        cs3           = 150 * cfs_to_m3      # 640 # ft
+        cs4           = 100 * cfs_to_m3      # 630 # ft
+        cs5           = 45 * cfs_to_m3      # 625 # ft
+        cs_line_thick = 0.1
+        legend_loc    = 2
         
         #------------------------------------------------------------------------------------------------------
         # - genarate the begining and end of decades as a list
@@ -272,60 +298,8 @@ for i in Models:
             
             return CS_dataframe
         
-        
-        
-        
-        CS_dataframe = []
-        CS           = np.array([0, 1, 2, 3, 4, 5])
-        CS_dataframe = pd.DataFrame({'CS' : CS}) 
-        CS_dataframe
-        
-        #------------------------------------------------------------------------------------------------------------------
-        # function that calculates % of unmet critical stages
-        #------------------------------------------------------------------------------------------------------------------
-        
-        def CS_per_calculator (df, var, time_start, time_end, time_period, CS1, CS2, CS3, CS4, CS5 ): 
-            
-            date_int       = (df.Date > time_start) & (df.Date < time_end) 
-            df_temp        = []
-            df_temp        = df[date_int]
-            df_temp.reset_index(drop = True, inplace = True)
-            len_data       = len(df_temp)
-            #print(len_data)
-            
-            condition      = df[var] >= CS1 
-            Percent_no_CS  = (df.Date[date_int & condition].count() ) / len_data
-            Percent_no_CS
-        
-            condition      = (df[var] < CS1) & (df[var] >= CS2)
-            Percent_CS1    = (df.Date[date_int & condition].count() ) / len_data
-            Percent_CS1    
-            
-            condition      = (df[var] < CS2) & (df[var] >= CS3)
-            Percent_CS2    = (df.Date[date_int & condition].count() ) / len_data
-            Percent_CS2
-            
-            condition      = (df[var] < CS3) & (df[var] >= CS4)
-            Percent_CS3    = (df.Date[date_int & condition].count() ) / len_data
-            Percent_CS3
-            
-            condition      = (df[var] < CS4) & (df[var] >= CS5)
-            Percent_CS4    = (df.Date[date_int & condition].count() ) / len_data
-            Percent_CS4
-            
-            condition      = (df[var] < CS5) 
-            Percent_CS5    = (df.Date[date_int & condition].count() ) / len_data
-            Percent_CS5
-               
-            per_CSs = np.array([Percent_no_CS,  Percent_CS1, Percent_CS2, Percent_CS3, Percent_CS4, Percent_CS5])
-            CS_dataframe[time_period]= pd.Series(per_CSs)
-            sum_col = CS_dataframe[time_period].sum()
-           
-            # make sure that sums up to 1.0
-            print('time period :', time_period, ' sum of CS:', sum_col)   
-            
-            return CS_dataframe
-        
+
+ 
         for i in range(len(start_date_list)):
             time_start  = start_date_list[i]
             time_end    = end_data_list[i]
