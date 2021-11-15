@@ -126,7 +126,7 @@ def make_path_to_save(Results,name):
 
 def Load_df_AI(file_path):
 	
-	df_read = pd.read_csv(file_path)
+	df_read = pd.read_csv(os.getcwd()+r"/Input/"+file_path)
 	df_read.index = pd.DatetimeIndex(df_read['Unnamed: 0'])
 	df_read = df_read.drop(columns = ['Unnamed: 0', 'Month'])
 	df_read=df_read.rename(columns = {"TMIN":"$T_{min}$ [$^oC$]",
